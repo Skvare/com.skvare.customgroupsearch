@@ -1,0 +1,21 @@
+diff --git a/CRM/Contact/Form/Search/Criteria.php b/CRM/Contact/Form/Search/Criteria.php
+index 38bd2cc1..724da9a4 100644
+--- a/CRM/Contact/Form/Search/Criteria.php
++++ b/CRM/Contact/Form/Search/Criteria.php
+@@ -605,6 +605,16 @@ class CRM_Contact_Form_Search_Criteria {
+     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE,
+       $extends
+     );
++    // PATCH START
++    // Allow configuration to be modified by a hook
++    if (class_exists('\Civi\Core\Event\GenericHookEvent')) {
++      \Civi::dispatcher()->dispatch('hook_civicrm_customGroupSearchRole',
++        \Civi\Core\Event\GenericHookEvent::create([
++          'groupDetails' => &$groupDetails,
++        ])
++      );
++    }
++    // PATCH END
+ 
+     $form->assign('groupTree', $groupDetails);
+ 
